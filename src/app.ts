@@ -1,16 +1,14 @@
 import "dotenv/config";
-import express, {Application, NextFunction} from 'express';
+import express, {Application} from 'express';
 import { sequelize } from './db';
 import routes from './routes';
 import errorHandler from "@/middleware/errorHandler";
-import CustomError from "@/utils/CustomError";
 
 const app:Application = express();
 
 app.use(express.json());
 app.use(routes);
 app.use(errorHandler);
-
 
 const start = async (): Promise<void> => {
     try {

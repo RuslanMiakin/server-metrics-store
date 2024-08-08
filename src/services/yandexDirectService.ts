@@ -42,36 +42,34 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         console.log('Report request sent successfully:', response.data);
         const reportData = parseTSV(response.data);
 
+        const records = reportData.map(record => ({
+            CampaignName: record.CampaignName,
+            Date: new Date(record.Date),
+            Clicks: parseInt(record.Clicks as string, 10) || 0,
+            Cost: parseFloat(record.Cost as string) || 0,
+            Ctr: parseFloat(record.Ctr as string) || 0,
+            AvgCpc: parseFloat(record.AvgCpc as string) || 0,
+            Conversions: parseInt(record.Conversions as string, 10) || 0,
+            CostPerConversion: parseFloat(record.CostPerConversion as string) || 0,
+            Impressions: parseInt(record.Impressions as string, 10) || 0,
+            user_id: 1,  // заполняем дефолтным значением
+            account_id: 1  // заполняем дефолтным значением
+        }));
+
         await sequelize.transaction(async (t) => {
-
-            await CampaignStatistics.destroy({ where: { account_id: 1 }, transaction: t }); // удаляем записи из таблицы где account_id = 1
-
-            // Запись новых данных
-            for (const record of reportData) {
-                await CampaignStatistics.create({
-                    CampaignName: record.CampaignName,
-                    Date: new Date(record.Date),
-                    Clicks: parseInt(record.Clicks as string, 10) || 0,
-                    Cost: parseFloat(record.Cost as string) || 0,
-                    Ctr: parseFloat(record.Ctr as string) || 0,
-                    AvgCpc: parseFloat(record.AvgCpc as string) || 0,
-                    Conversions: parseInt(record.Conversions as string, 10) || 0,
-                    CostPerConversion: parseFloat(record.CostPerConversion as string) || 0,
-                    Impressions: parseInt(record.Impressions as string, 10) || 0,
-
-                    user_id: 1,  // заполняем дефолтным значением
-                    account_id: 1  // заполняем дефолтным значением
-                }, { transaction: t });
-            }
+            await CampaignStatistics.bulkCreate(records, { transaction: t }); // создаем новые записи
+            // await CampaignStatistics.destroy({ where: { account_id: 1 }, transaction: t }); // удаляем записи из таблицы где account_id = 1
         });
 
+
+
         console.log('Данные успешно обновлены в базе данных');
-    } catch (error:any) {
+    } catch (error) {
         if (axios.isAxiosError(error)) {
             const errorMsg = error.response ? error.response.data : error.message;
             throw CustomError.internal('Ошибка запроса отчета из Яндекс Директ', errorMsg);
         } else {
-            throw CustomError.internal('Произошла непредвиденная ошибка', error.message);
+            throw CustomError.internal('Произошла непредвиденная ошибка', error);
         }
     }
 };

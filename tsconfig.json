@@ -11,17 +11,14 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "node_modules/@types/node/globals.d.ts"],
+    "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
     }
   },
   "include": [
-    "node_modules/@types",
     "src/**/*.ts",
     "src/**/*",
-    "node_modules/@types/node/globals.d.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

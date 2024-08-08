@@ -10,7 +10,7 @@ function errorHandler(err: any, req: Request, res: Response, next: NextFunction)
             details: err.details,
         });
     } else {
-        res.status(500).json({
+            res.status(500).json({
             status: 'error',
             message: 'Внутренняя ошибка сервера',
         });
