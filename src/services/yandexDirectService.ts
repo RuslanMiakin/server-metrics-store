@@ -1,10 +1,8 @@
 import axios from 'axios';
 import {sequelize} from "@/db";
 import {CampaignStatistics} from "@/db/models/CampaignStatistics";
-
-interface ReportData {
-    [key: string]: string | number;
-}
+import {parseTSV} from "@/utils/parseTSV";
+import CustomError from "@/utils/CustomError";
 
 export const getYandexDirectReport = async (dateFrom: string, dateTo: string, includeVAT: boolean, reportName: string) => {
     const fieldsArray = [
@@ -39,22 +37,6 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         }
     };
 
-    const parseTSV = (tsv: string): ReportData[] => {
-
-        const lines = tsv.split('\n').filter(line => line.trim() !== '');
-        const headers = lines[0].split('\t');
-        const data = lines.slice(1).map(line => {
-            const values = line.split('\t');
-            return headers.reduce((obj: ReportData, header, index) => {
-                obj[header] = values[index];
-                return obj;
-            }, {} as ReportData);
-        });
-
-        console.log(data);
-        return data;
-    };
-
     try {
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
         console.log('Report request sent successfully:', response.data);
@@ -83,12 +65,13 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
             }
         });
 
-        console.log('Data successfully updated in the database');
-    } catch (error) {
+        console.log('Данные успешно обновлены в базе данных');
+    } catch (error:any) {
         if (axios.isAxiosError(error)) {
-            console.error('Error requesting report:', error.response ? error.response.data : error.message);
+            const errorMsg = error.response ? error.response.data : error.message;
+            throw CustomError.internal('Ошибка запроса отчета из Яндекс Директ', errorMsg);
         } else {
-            console.error('Error requesting report:', error);
+            throw CustomError.internal('Произошла непредвиденная ошибка', error.message);
         }
     }
 };

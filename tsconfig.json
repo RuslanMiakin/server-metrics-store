@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -18,6 +18,8 @@
     }
   },
   "include": [
+    "node_modules/@types",
+    "src/**/*.ts",
     "src/**/*",
     "node_modules/@types/node/globals.d.ts"
   ],
