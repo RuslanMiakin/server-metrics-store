@@ -28,53 +28,53 @@ declare id: number;
         type: DataType.STRING,
         allowNull: false
     })
-    declare CampaignName: string;
+    declare campaignName: string;
 
     @Column({
         type: DataType.DATE,
         allowNull: false
     })
-    declare Date: Date;
+    declare date: Date;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false
     })
-    declare Clicks: number;
+    declare clicks: number;
 
     @Column({
         type: DataType.FLOAT,
         allowNull: false
     })
-    declare Cost: number;
+    declare cost: number;
 
     @Column({
         type: DataType.FLOAT,
         allowNull: false
     })
-    declare Ctr: number;
+    declare ctr: number;
 
     @Column({
         type: DataType.FLOAT,
         allowNull: false
     })
-    declare AvgCpc: number;
+    declare avgCpc: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false
     })
-    declare Conversions: number;
+    declare conversions: number;
 
     @Column({
         type: DataType.FLOAT,
         allowNull: false
     })
-    declare CostPerConversion: number;
+    declare costPerConversion: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false
     })
-    declare Impressions: number;
+    declare impressions: number;
 }

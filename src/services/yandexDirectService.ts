@@ -41,19 +41,21 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
         console.log('Report request sent successfully:', response.data);
         const reportData = parseTSV(response.data);
+        // const userId = Math.floor(Math.random() * 1000); // Генерация случайного user_id
+        // const accountId = Math.floor(Math.random() * 1000); // Генерация случайного account_id
 
         const records = reportData.map(record => ({
-            CampaignName: record.CampaignName,
-            Date: new Date(record.Date),
-            Clicks: parseInt(record.Clicks as string, 10) || 0,
-            Cost: parseFloat(record.Cost as string) || 0,
-            Ctr: parseFloat(record.Ctr as string) || 0,
-            AvgCpc: parseFloat(record.AvgCpc as string) || 0,
-            Conversions: parseInt(record.Conversions as string, 10) || 0,
-            CostPerConversion: parseFloat(record.CostPerConversion as string) || 0,
-            Impressions: parseInt(record.Impressions as string, 10) || 0,
-            user_id: 1,  // заполняем дефолтным значением
-            account_id: 1  // заполняем дефолтным значением
+            user_id: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
+            account_id: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
+            campaignName: record.CampaignName,
+            date: new Date(record.Date),
+            clicks: parseInt(record.Clicks as string, 10) || 0,
+            cost: parseFloat(record.Cost as string) || 0,
+            ctr: parseFloat(record.Ctr as string) || 0,
+            avgCpc: parseFloat(record.AvgCpc as string) || 0,
+            conversions: parseInt(record.Conversions as string, 10) || 0,
+            costPerConversion: parseFloat(record.CostPerConversion as string) || 0,
+            impressions: parseInt(record.Impressions as string, 10) || 0
         }));
 
         await sequelize.transaction(async (t) => {
