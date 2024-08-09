@@ -2,7 +2,7 @@ import axios from 'axios';
 import {sequelize} from "@/db";
 import {CampaignStatistics} from "@/db/models/CampaignStatistics";
 import {parseTSV} from "@/utils/parseTSV";
-import CustomError from "@/utils/CustomError";
+import CustomError from "@/errors/CustomError";
 
 export const getYandexDirectReport = async (dateFrom: string, dateTo: string, includeVAT: boolean, reportName: string) => {
     const fieldsArray = [
@@ -60,8 +60,6 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
             await CampaignStatistics.bulkCreate(records, { transaction: t }); // создаем новые записи
             // await CampaignStatistics.destroy({ where: { account_id: 1 }, transaction: t }); // удаляем записи из таблицы где account_id = 1
         });
-
-
 
         console.log('Данные успешно обновлены в базе данных');
     } catch (error) {
