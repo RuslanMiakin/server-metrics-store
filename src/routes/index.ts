@@ -1,7 +1,7 @@
 import express, {NextFunction} from 'express';
-import {fetchAndStoreYandexReport} from "@/controllers/yandexController";
-import CustomError from "@/errors/CustomError";
-import {getAllStatisticsController} from "@/controllers/statisticsController";
+import {fetchAndStoreYandexReport} from "../controllers/yandexController";
+import {getAllStatisticsController} from "../controllers/statisticsController";
+import CustomError from "../errors/CustomError";
 
 const router = express();
 

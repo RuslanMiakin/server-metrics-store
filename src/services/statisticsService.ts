@@ -1,5 +1,5 @@
-import {CampaignStatistics} from "@/db/models/CampaignStatistics";
-import CustomError from "@/errors/CustomError";
+import {CampaignStatistics} from "../db/models/CampaignStatistics";
+import CustomError from "../errors/CustomError";
 
 export const getAllStatistics = async () => {
     try {

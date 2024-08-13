@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {sequelize} from "@/db";
-import {CampaignStatistics} from "@/db/models/CampaignStatistics";
-import {parseTSV} from "@/utils/parseTSV";
-import CustomError from "@/errors/CustomError";
+import {parseTSV} from "../utils/parseTSV";
+import {sequelize} from "../db";
+import {CampaignStatistics} from "../db/models/CampaignStatistics";
+import CustomError from "../errors/CustomError";
 
 export const getYandexDirectReport = async (dateFrom: string, dateTo: string, includeVAT: boolean, reportName: string) => {
     const fieldsArray = [

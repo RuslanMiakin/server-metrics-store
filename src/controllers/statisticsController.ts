@@ -1,7 +1,7 @@
-import {getAllStatistics} from "@/services/statisticsService";
 import {NextFunction} from "express";
 import { Request, Response } from 'express';
-import CustomError from "@/errors/CustomError";
+import {getAllStatistics} from "../services/statisticsService";
+import CustomError from "../errors/CustomError";
 
 export const getAllStatisticsController = async (req: Request, res: Response, next: NextFunction) =>{
     try {

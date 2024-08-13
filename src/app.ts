@@ -2,8 +2,8 @@ import "dotenv/config";
 import express, {Application} from 'express';
 import { sequelize } from './db';
 import routes from './routes';
-import errorHandler from "@/middleware/errorHandler";
 import cors from 'cors';
+import errorHandler from "./middleware/errorHandler";
 const app:Application = express();
 
 app.use(cors());

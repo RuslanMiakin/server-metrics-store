@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { getYandexDirectReport } from "@/services/yandexDirectService";
-import CustomError from "@/errors/CustomError";
+import CustomError from "../errors/CustomError";
+import {getYandexDirectReport} from "../services/yandexDirectService";
 
 export const fetchAndStoreYandexReport = async (req: Request, res: Response, next: NextFunction) => {
     const { dateFrom, dateTo, includeVAT, reportName } = req.body;
