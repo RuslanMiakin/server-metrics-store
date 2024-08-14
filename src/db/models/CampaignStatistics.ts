@@ -1,4 +1,5 @@
-import { DataType, Table, Column, Model } from 'sequelize-typescript';
+import {DataType, Table, Column, Model, ForeignKey, BelongsTo} from 'sequelize-typescript';
+import {User} from "./User";
 
 @Table({
     tableName: 'campaigns',
@@ -11,13 +12,15 @@ export class CampaignStatistics extends Model {
         primaryKey: true
     })
 declare id: number;
-
+    @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
         defaultValue: 1
     })
     declare user_id: number;
 
+    @BelongsTo(() => User)
+    user?: User;
     @Column({
         type: DataType.INTEGER,
         defaultValue: 1

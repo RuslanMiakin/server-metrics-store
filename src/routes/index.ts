@@ -2,15 +2,15 @@ import express, {NextFunction} from 'express';
 import {fetchAndStoreYandexReport} from "../controllers/yandexController";
 import {getAllStatisticsController} from "../controllers/statisticsController";
 import CustomError from "../errors/CustomError";
-
+import {usersRoutes} from "./UserRoutes";
 const router = express();
 
-router.get('/test1', (req, res) =>
-    res.status(666).send({ test: 'test1' }));
-router.get('/test2', (req, res) =>
-    res.status(777).send({ test: 'test2' }));
-router.post('/yandex-report', fetchAndStoreYandexReport);
+router.get('/test', (req, res) =>
+    res.status(777).send({ test: 'test' }));
 
+router.use('/users', usersRoutes);
+
+router.post('/yandex-report', fetchAndStoreYandexReport);
 router.get('/statistics', getAllStatisticsController)
 
 router.use((req, res, next) => {
