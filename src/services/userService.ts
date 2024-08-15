@@ -15,3 +15,16 @@ export const createUser = async (userData: UserDto) => {
         throw e;
     }
 }
+
+export const getUserByEmail = async (email: string) => {
+    try {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}

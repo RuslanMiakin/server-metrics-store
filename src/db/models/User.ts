@@ -1,6 +1,6 @@
 import { DataType, Table, Column, Model } from 'sequelize-typescript';
 
-enum Role {
+export enum Role {
     ADMIN = 1
 }
 
