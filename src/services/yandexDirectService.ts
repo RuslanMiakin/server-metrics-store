@@ -3,6 +3,16 @@ import {parseTSV} from "../utils/parseTSV";
 import {sequelize} from "../db";
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
+import {registration} from "./authService";
+
+const createTestUser = async () => {
+    const testUser = await registration({
+        email: 'test@test.com',
+        password: 'password123'
+    });
+    return testUser.id;
+};
+// const userId = await createTestUser();
 
 export const getYandexDirectReport = async (dateFrom: string, dateTo: string, includeVAT: boolean, reportName: string) => {
     const fieldsArray = [
@@ -43,9 +53,9 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         const reportData = parseTSV(response.data);
         // const userId = Math.floor(Math.random() * 1000); // Генерация случайного user_id
         // const accountId = Math.floor(Math.random() * 1000); // Генерация случайного account_id
-
+        const userId = await createTestUser();
         const records = reportData.map(record => ({
-            user_id: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
+            user_id: userId,  // заполняем дефолтным значением
             account_id: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
             campaignName: record.CampaignName,
             date: new Date(record.Date),
