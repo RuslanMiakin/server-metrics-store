@@ -4,32 +4,37 @@ import {sequelize} from "../db";
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
 import {registration} from "./authService";
+import {User} from "../db/models/User";
 
 const createTestUser = async () => {
+    const existingUser = await User.findOne({ where: { email: 'test@test.com' } });
+
+    if (existingUser) {
+        console.log(`User with email ${existingUser.email} already exists`);
+        return existingUser.id;
+    }
+
     const testUser = await registration({
         email: 'test@test.com',
         password: 'password123'
     });
+
     return testUser.id;
 };
-// const userId = await createTestUser();
 
-export const getYandexDirectReport = async (dateFrom: string, dateTo: string, includeVAT: boolean, reportName: string) => {
+export const getYandexDirectReport = async (includeVAT: boolean, reportName: string) => {
     const fieldsArray = [
         'CampaignName', 'Date', 'Clicks', 'Cost', 'Ctr', 'AvgCpc', 'Conversions', 'CostPerConversion', 'Impressions'
     ];
 
     const data = {
         "params": {
+            "SelectionCriteria": {},
             "FieldNames": fieldsArray,
             "ReportType": "CUSTOM_REPORT",
-            "DateRangeType": "CUSTOM_DATE",
-            "SelectionCriteria": {
-                "DateFrom": dateFrom,
-                "DateTo": dateTo
-            },
+            "DateRangeType": "ALL_TIME",
             "IncludeVAT": includeVAT ? 'YES' : 'NO',
-            "ReportName": reportName,
+            "ReportName":reportName,
             "Format": "TSV",
             "IncludeDiscount": "NO"
         }
@@ -51,8 +56,6 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
         console.log('Report request sent successfully:', response.data);
         const reportData = parseTSV(response.data);
-        // const userId = Math.floor(Math.random() * 1000); // Генерация случайного user_id
-        // const accountId = Math.floor(Math.random() * 1000); // Генерация случайного account_id
         const userId = await createTestUser();
         const records = reportData.map(record => ({
             user_id: userId,  // заполняем дефолтным значением
@@ -69,11 +72,12 @@ export const getYandexDirectReport = async (dateFrom: string, dateTo: string, in
         }));
 
         await sequelize.transaction(async (t) => {
+            await CampaignStatistics.destroy({ where: {}, transaction: t }); // удаляем все записи из таблицы
             await CampaignStatistics.bulkCreate(records, { transaction: t }); // создаем новые записи
-            // await CampaignStatistics.destroy({ where: { account_id: 1 }, transaction: t }); // удаляем записи из таблицы где account_id = 1
         });
 
         console.log('Данные успешно обновлены в базе данных');
+        return response;
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const errorMsg = error.response ? error.response.data : error.message;
