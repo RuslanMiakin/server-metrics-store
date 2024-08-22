@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express, {Application} from 'express';
-import './cron/scheduler'
+// import './cron/scheduler'
 import { sequelize } from './db';
 import routes from './routes';
 import cors from 'cors';

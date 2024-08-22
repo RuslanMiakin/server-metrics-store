@@ -1,9 +1,9 @@
 import express, {NextFunction} from 'express';
 import {fetchAndStoreYandexReport} from "../controllers/yandexController";
-import {getAllStatisticsController} from "../controllers/statisticsController";
 import CustomError from "../errors/CustomError";
 import {usersRoutes} from "./userRoutes";
 import {authRoutes} from "./authRoutes";
+import {statisticsController} from "./statisticsController";
 const router = express();
 
 router.get('/test', (req, res) =>
@@ -11,9 +11,9 @@ router.get('/test', (req, res) =>
 
 router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
+router.use('/statistics', statisticsController)
 
 router.post('/yandex-report', fetchAndStoreYandexReport);
-router.get('/statistics', getAllStatisticsController)
 
 router.use((req, res, next) => {
     next(CustomError.notFound('Маршрут не найден'));

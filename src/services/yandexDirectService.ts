@@ -63,11 +63,11 @@ export const getYandexDirectReport = async (includeVAT: boolean, reportName: str
             campaignName: record.CampaignName,
             date: new Date(record.Date),
             clicks: parseInt(record.Clicks as string, 10) || 0,
-            cost: parseFloat(record.Cost as string) || 0,
+            cost: parseFloat(record.Cost as string) / 1000000 || 0,
             ctr: parseFloat(record.Ctr as string) || 0,
-            avgCpc: parseFloat(record.AvgCpc as string) || 0,
+            avgCpc: parseFloat(record.AvgCpc as string) / 1000000 || 0,
             conversions: parseInt(record.Conversions as string, 10) || 0,
-            costPerConversion: parseFloat(record.CostPerConversion as string) || 0,
+            costPerConversion: parseFloat(record.CostPerConversion as string) / 1000000 || 0,
             impressions: parseInt(record.Impressions as string, 10) || 0
         }));
 
