@@ -1,17 +1,31 @@
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
+import {Op} from "sequelize";
 
-export const getAllStatistics = async () => {
+export const getAllStatistics = async (intervalFrom?: string, intervalTo?: string) => {
     try {
-        const statistics = await CampaignStatistics.findAll();
+        const whereClause = intervalFrom && intervalTo ? {
+            date: {
+                [Op.between]: [intervalFrom, intervalTo]
+            }
+        } : {};
+
+        const statistics = await CampaignStatistics.findAll({ where: whereClause });
+        // console.log(statistics);
         return statistics;
     } catch (error) {
-       throw CustomError.internal('Непредвиденная ошибка', error)
+        throw CustomError.internal('Непредвиденная ошибка', error);
     }
 };
-export const getDailyStatistics = async () => {
-    try {
-        const statistics = await CampaignStatistics.findAll();
+    export const getDailyStatistics = async (intervalFrom?: string, intervalTo?: string) => {
+        try {
+            const whereClause = intervalFrom && intervalTo ? {
+                date: {
+                    [Op.between]: [intervalFrom, intervalTo]
+                }
+            } : {};
+
+            const statistics = await CampaignStatistics.findAll({ where: whereClause });
         let idCounter = 1;
         // группируем данные по датам
         const groupedStatistics = statistics.reduce((acc: any, stat: any) => {
@@ -53,7 +67,7 @@ export const getDailyStatistics = async () => {
 
         }
 
-        const result = Object.values(groupedStatistics); // преобразуем объект в массив
+        const result = Object.values(groupedStatistics);
 
         return result;
     } catch (error) {

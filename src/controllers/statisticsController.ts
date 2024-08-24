@@ -5,7 +5,8 @@ import CustomError from "../errors/CustomError";
 
 export const getAllStatisticsController = async (req: Request, res: Response, next: NextFunction) =>{
     try {
-        const statistics = await getAllStatistics()
+        const { intervalFrom, intervalTo } = req.body;
+        const statistics = await getAllStatistics(intervalFrom, intervalTo);
         if (!statistics) {
             next(CustomError.notFound('Статистика не найдена'))
         }
@@ -17,7 +18,8 @@ export const getAllStatisticsController = async (req: Request, res: Response, ne
 
 export const getDailyStatisticsController = async (req: Request, res: Response, next: NextFunction) =>{
     try {
-        const statistics = await getDailyStatistics()
+        const { intervalFrom, intervalTo } = req.body;
+        const statistics = await getDailyStatistics(intervalFrom, intervalTo);
         if (!statistics) {
             next(CustomError.notFound('Статистика не найдена'))
         }

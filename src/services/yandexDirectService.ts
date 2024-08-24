@@ -13,12 +13,10 @@ const createTestUser = async () => {
         console.log(`User with email ${existingUser.email} already exists`);
         return existingUser.id;
     }
-
     const testUser = await registration({
         email: 'test@test.com',
         password: 'password123'
     });
-
     return testUser.id;
 };
 

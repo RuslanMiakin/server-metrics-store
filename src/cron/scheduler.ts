@@ -16,7 +16,6 @@ cron.schedule('0 6 * * *', async () => {
             if (response.status === 200) {
                 console.log('Данные успешно обновлены');
                 console.log(parseTSV(response.data)[4000])
-
                 return;
             } else {
                 console.log(`Не удалось обновить данные, код ответа: ${response.status}. Повторная попытка...`);
