@@ -1,17 +1,23 @@
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
 import {Op} from "sequelize";
+import dayjs from "dayjs";
 
 export const getAllStatistics = async (intervalFrom?: string, intervalTo?: string) => {
     try {
-        const whereClause = intervalFrom && intervalTo ? {
+        let adjustedIntervalTo: string | undefined = intervalTo;
+
+        if (intervalTo) {
+            adjustedIntervalTo = dayjs(intervalTo).add(1, 'day').format('YYYY-MM-DD');// добавляем 1 день
+        }
+
+        const whereClause = intervalFrom && adjustedIntervalTo ? {
             date: {
-                [Op.between]: [intervalFrom, intervalTo]
+                [Op.between]: [intervalFrom, adjustedIntervalTo]
             }
         } : {};
 
         const statistics = await CampaignStatistics.findAll({ where: whereClause });
-        // console.log(statistics);
         return statistics;
     } catch (error) {
         throw CustomError.internal('Непредвиденная ошибка', error);
@@ -19,9 +25,14 @@ export const getAllStatistics = async (intervalFrom?: string, intervalTo?: strin
 };
     export const getDailyStatistics = async (intervalFrom?: string, intervalTo?: string) => {
         try {
+            let adjustedIntervalTo: string | undefined = intervalTo;
+
+            if (intervalTo) {
+                adjustedIntervalTo = dayjs(intervalTo).add(1, 'day').format('YYYY-MM-DD');// добавляем 1 день
+            }
             const whereClause = intervalFrom && intervalTo ? {
                 date: {
-                    [Op.between]: [intervalFrom, intervalTo]
+                    [Op.between]: [intervalFrom, adjustedIntervalTo]
                 }
             } : {};
 

@@ -40,7 +40,7 @@ export const getYandexDirectReport = async (includeVAT: boolean, reportName: str
 
     const options = {
         headers: {
-            'Authorization': 'Bearer y0_AgAAAAA0UpcqAAZAOQAAAAEGJn5gAADfUJXb9K9G5bU09jRVF0LEst_SeQ',
+            'Authorization': 'Bearer y0_AgAAAAA0UpcqAAZAOQAAAAEPDcBQAABh-dCIoE5H_4Z0CdXtlMSV37uB2A',
             'Content-Type': 'application/json; charset=utf-8',
             'Client-Login': 'e-16459034',
             'processingMode': 'offline',

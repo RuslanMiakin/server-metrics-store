@@ -3,7 +3,7 @@ import {getAllStatisticsController, getDailyStatisticsController} from "../contr
 
 const router = express.Router();
 
-router.post('/', getAllStatisticsController)
-router.post('/daily', getDailyStatisticsController)
+router.get('/', getAllStatisticsController)
+router.get('/daily', getDailyStatisticsController)
 
 export const statisticsController = router;
