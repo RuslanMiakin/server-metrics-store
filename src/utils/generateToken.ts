@@ -11,7 +11,7 @@ interface IUser {
 
 export const generateToken = (user: IUser) => {
   const payload = {
-    userId: user.id,
+    id: user.id,
     email: user.email,
     roleId: user.role
   };

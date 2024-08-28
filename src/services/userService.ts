@@ -28,3 +28,29 @@ export const getUserByEmail = async (email: string) => {
         throw e;
     }
 }
+export const changePassword = async (userId: string, oldPassword: string, newPassword: string) => {
+    try {
+
+        const user = await User.findByPk(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            throw new Error('Old password is incorrect');
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        user.password = hashedNewPassword;
+        await user.save();
+
+        return {
+            message: 'Password successfully changed'
+        };
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}

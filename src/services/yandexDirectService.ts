@@ -17,6 +17,7 @@ const createTestUser = async () => {
         email: 'test@test.com',
         password: 'password123'
     });
+    console.log(testUser.id)
     return testUser.id;
 };
 

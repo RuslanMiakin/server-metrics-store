@@ -27,10 +27,6 @@ export const login = async (loginData: UserDto): Promise<string> => {
             throw new Error(`User password is missing or invalid. ${JSON.stringify(user, null, 2)}`);
         }
 
-        // const loginPass = await bcrypt.hash(loginData.password, 10);
-        // console.log('USER PASSWORD:', user.password);
-        // console.log('LOGIN PASSWORD:', loginPass);
-
         const isValid = await bcrypt.compare(loginData.password, user.password);
         if (!isValid) {
             const error = new Error('Invalid password');

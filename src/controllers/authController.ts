@@ -3,6 +3,7 @@ import CustomError from "../errors/CustomError";
 import jwt from "jsonwebtoken";
 import {generateToken} from "../utils/generateToken";
 import {login, registration} from "../services/authService";
+import {User} from "../db/models/User";
 
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -57,3 +58,30 @@ export const validateTokenController = async (req: Request, res: Response, next:
         next(CustomError.internal('Валидация токена не удалась', e));
     }
 }
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET не определен');
+    }
+        try {
+            const authHeader = req.headers.authorization;
+            if (!authHeader) {
+                return res.status(401).json({ message: 'Authorization header is missing' });
+            }
+
+            const token = authHeader.split(' ')[1];
+            if (!token) {
+                next(CustomError.unauthorized('Токен не предоставлен'));
+            }
+
+            const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findByPk(decoded.id);
+            console.log(user)
+            if (!user) {
+                return res.status(401).json({ message: 'User not found' });
+            }
+            (req as any).user = user; // добавляем объект пользователя в req.user
+            next();
+        } catch (err) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+};
