@@ -43,7 +43,6 @@ export const getChartStatistics = async (intervalFrom?: string, intervalTo?: str
             totalClicks += stat.clicks;
             totalCost += stat.cost;
             totalConversions += stat.conversions;
-
             return acc;
         }, {});
 
@@ -52,7 +51,7 @@ export const getChartStatistics = async (intervalFrom?: string, intervalTo?: str
             dailyStatistics,
             totalStatistics: {
                 clicks: totalClicks,
-                cost: totalCost,
+                cost: parseFloat(totalCost.toFixed(2)),
                 conversions: totalConversions
             }
         };
