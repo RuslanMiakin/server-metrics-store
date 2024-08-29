@@ -4,6 +4,7 @@ import CustomError from "../errors/CustomError";
 import {usersRoutes} from "./userRoutes";
 import {authRoutes} from "./authRoutes";
 import {statisticsController} from "./statisticsController";
+import {chartStatisticsController} from "./chartStatisticsController";
 const router = express();
 
 router.get('/test', (req, res) =>
@@ -12,6 +13,7 @@ router.get('/test', (req, res) =>
 router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
 router.use('/statistics', statisticsController)
+router.use('/chartStatistics', chartStatisticsController)
 
 router.post('/yandex-report', fetchAndStoreYandexReport);
 
@@ -21,3 +23,4 @@ router.use((req, res, next) => {
 });
 
 export default router;
+
