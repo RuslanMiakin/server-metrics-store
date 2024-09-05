@@ -1,5 +1,6 @@
-import {DataType, Table, Column, Model, ForeignKey, BelongsTo} from 'sequelize-typescript';
-import {User} from "./User";
+import { DataType, Table, Column, Model, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { User } from './User';
+import { MarketData } from './MarketData';
 
 @Table({
     tableName: 'campaigns',
@@ -11,7 +12,8 @@ export class CampaignStatistics extends Model {
         autoIncrement: true,
         primaryKey: true
     })
-declare id: number;
+    declare id: number;
+
     @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
@@ -21,6 +23,17 @@ declare id: number;
 
     @BelongsTo(() => User)
     user?: User;
+
+    @ForeignKey(() => MarketData)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    declare market_data_id: number;
+
+    @BelongsTo(() => MarketData)
+    marketData?: MarketData;
+
     @Column({
         type: DataType.INTEGER,
         defaultValue: 1

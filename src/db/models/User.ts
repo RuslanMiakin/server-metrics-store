@@ -1,4 +1,5 @@
-import { DataType, Table, Column, Model } from 'sequelize-typescript';
+import { DataType, Table, Column, Model, HasMany } from 'sequelize-typescript';
+import { MarketData } from './MarketData';
 
 export enum Role {
     ADMIN = 1
@@ -40,4 +41,7 @@ export class User extends Model {
         defaultValue: Role.ADMIN
     })
     declare role: number;
+
+    @HasMany(() => MarketData)
+    marketData?: MarketData[];
 }
