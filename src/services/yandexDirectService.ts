@@ -5,20 +5,41 @@ import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
 import {registration} from "./authService";
 import {User} from "../db/models/User";
+import {MarketData} from "../db/models/MarketData";
+import {createMarket} from "./marketService";
 
 const createTestUser = async () => {
     const existingUser = await User.findOne({ where: { email: 'test@test.com' } });
 
     if (existingUser) {
         console.log(`User with email ${existingUser.email} already exists`);
-        return existingUser.id;
+        return existingUser.userId;
     }
     const testUser = await registration({
         email: 'test@test.com',
-        password: 'password123'
+        password: 'password123',
+        lastName: 'Test',
+        firstName: 'Test'
     });
-    console.log(testUser.id)
-    return testUser.id;
+    console.log(testUser.userId)
+    return testUser.userId;
+};
+    const createTestMarket = async () => {
+    const existingMarket = await MarketData.findOne({ where: { marketName: 'Test Market' } });
+
+    if (existingMarket) {
+        console.log(`Market with name ${existingMarket.marketName} already exists`);
+        return existingMarket.marketId;
+    }
+
+    // Создаем новый тестовый рынок
+    const testMarket = await createMarket({
+        userId: 1, // Предположительно, тестовый пользователь
+        marketName: 'Test Market',
+        token: 'test-token-123' // Предположительно, тестовый токен
+    });
+    console.log(testMarket.userId)
+    return testMarket.marketId;
 };
 
 export const getYandexDirectReport = async (includeVAT: boolean, reportName: string) => {
@@ -53,12 +74,16 @@ export const getYandexDirectReport = async (includeVAT: boolean, reportName: str
 
     try {
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
-        console.log('Report request sent successfully:', response.data);
+        // console.log('Report request sent successfully:', response.data);
         const reportData = parseTSV(response.data);
+
         const userId = await createTestUser();
+        const marketId = await createTestMarket();
+
         const records = reportData.map(record => ({
-            user_id: userId,  // заполняем дефолтным значением
-            account_id: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
+            userId: userId,  // заполняем дефолтным значением
+            marketId: marketId,  // заполняем дефолтным значением
+            // accountId: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
             campaignName: record.CampaignName,
             date: new Date(record.Date),
             clicks: parseInt(record.Clicks as string, 10) || 0,

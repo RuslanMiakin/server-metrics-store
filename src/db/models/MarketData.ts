@@ -12,7 +12,7 @@ export class MarketData extends Model {
         autoIncrement: true,
         primaryKey: true
     })
-    declare id: number;
+    declare marketId: number;
 
     @ForeignKey(() => User)
     @Column({
@@ -28,7 +28,7 @@ export class MarketData extends Model {
         type: DataType.STRING,
         allowNull: false
     })
-    declare name: string;
+    declare marketName: string;
 
     @Column({
         type: DataType.STRING,

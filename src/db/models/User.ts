@@ -15,7 +15,7 @@ export class User extends Model {
         autoIncrement: true,
         primaryKey: true
     })
-    declare id: number;
+    declare userId: number;
 
     @Column({
         type: DataType.STRING,
@@ -29,6 +29,18 @@ export class User extends Model {
         allowNull: false
     })
     declare password: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    declare firstName: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    declare lastName: string;
 
     @Column({
         type: DataType.INTEGER,

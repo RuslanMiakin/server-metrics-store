@@ -6,4 +6,4 @@ const router = express.Router();
 router.get('/', getAllStatisticsController)
 router.get('/daily', getDailyStatisticsController)
 
-export const statisticsController = router;
+export const statisticsRoutes = router;

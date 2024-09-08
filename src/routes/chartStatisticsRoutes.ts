@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.get('/', getChartStatisticsController)
 
-export const chartStatisticsController = router;
+export const chartStatisticsRoutes = router;

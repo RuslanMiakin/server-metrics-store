@@ -5,7 +5,6 @@ import {createUser, getUserByEmail} from "./userService";
 
 export const login = async (loginData: UserDto): Promise<string> => {
     try {
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(loginData.email)) {
             throw new Error('Invalid email format');
@@ -17,8 +16,6 @@ export const login = async (loginData: UserDto): Promise<string> => {
             error.name = 'EmailNotFoundError';
             throw error;
         }
-        console.log('LOGIN DATA:', loginData.password);
-        console.log('USER LOGIN:', user.dataValues.password);
 
         if (!loginData.password || typeof loginData.password !== 'string') {
             throw new Error('Login password is missing or invalid');
@@ -46,6 +43,8 @@ export const registration = async (data: UserDto) => {
             const newUser = await createUser({
                 email: data.email,
                 password: data.password,
+                firstName: data.firstName,
+                lastName: data.lastName,
             });
         return newUser;
     } catch (e) {

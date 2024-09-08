@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 
 export const createUser = async (userData: UserDto) => {
     try {
+        if (!userData.password) {
+            throw new Error('Password is required');
+        }
         const hashedPassword = await bcrypt.hash(userData.password, 10);
         const user = await User.create({
             ...userData,

@@ -12,14 +12,14 @@ export class CampaignStatistics extends Model {
         autoIncrement: true,
         primaryKey: true
     })
-    declare id: number;
+    declare campaignId: number;
 
     @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
         defaultValue: 1
     })
-    declare user_id: number;
+    declare userId: number;
 
     @BelongsTo(() => User)
     user?: User;
@@ -29,7 +29,7 @@ export class CampaignStatistics extends Model {
         type: DataType.INTEGER,
         allowNull: false
     })
-    declare market_data_id: number;
+    declare marketId: number;
 
     @BelongsTo(() => MarketData)
     marketData?: MarketData;
@@ -38,7 +38,7 @@ export class CampaignStatistics extends Model {
         type: DataType.INTEGER,
         defaultValue: 1
     })
-    declare account_id: number;
+    declare accountId: number;
 
     @Column({
         type: DataType.STRING,

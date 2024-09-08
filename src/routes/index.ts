@@ -3,8 +3,9 @@ import {fetchAndStoreYandexReport} from "../controllers/yandexController";
 import CustomError from "../errors/CustomError";
 import {usersRoutes} from "./userRoutes";
 import {authRoutes} from "./authRoutes";
-import {statisticsController} from "./statisticsController";
-import {chartStatisticsController} from "./chartStatisticsController";
+import {statisticsRoutes} from "./statisticsRoutes";
+import {chartStatisticsRoutes} from "./chartStatisticsRoutes";
+import {marketRoutes} from "./marketRoutes";
 const router = express();
 
 router.get('/test', (req, res) =>
@@ -12,8 +13,9 @@ router.get('/test', (req, res) =>
 
 router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
-router.use('/statistics', statisticsController)
-router.use('/chartStatistics', chartStatisticsController)
+router.use('/statistics', statisticsRoutes)
+router.use('/chartStatistics', chartStatisticsRoutes)
+router.use('/markets', marketRoutes)
 
 router.post('/yandex-report', fetchAndStoreYandexReport);
 

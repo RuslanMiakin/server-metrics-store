@@ -23,8 +23,9 @@ export class CustomError extends Error {
     }
 
     static internal(message: string, details?: any) {
-        return new CustomError(500, message, details);
+        return new CustomError(500, message,  details);
     }
+
     static databaseConnectionError(details?: any) {
         return new CustomError(500, 'Ошибка подключения к базе данных или запуска сервера', details);
     }
