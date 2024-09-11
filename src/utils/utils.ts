@@ -16,7 +16,7 @@ export const createTestUser = async () => {
         lastName: 'Test',
         firstName: 'Test'
     });
-    console.log(testUser.userId)
+    // console.log(testUser.userId)
     return testUser.userId;
 };
 export const createTestMarket = async () => {
@@ -32,6 +32,6 @@ export const createTestMarket = async () => {
         marketName: 'Test Market',
         token: 'y0_AgAAAAA0UpcqAAZAOQAAAAEPDcBQAABh-dCIoE5H_4Z0CdXtlMSV37uB2A'
     });
-    console.log(testMarket.userId)
+    // console.log(testMarket.userId)
     return testMarket.marketId;
 };

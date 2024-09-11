@@ -3,7 +3,7 @@ import CustomError from "../errors/CustomError";
 import {Op} from "sequelize";
 import dayjs from "dayjs";
 
-export const getAllStatistics = async (intervalFrom?: string, intervalTo?: string) => {
+export const getAllStatistics = async (intervalFrom?: string, intervalTo?: string, userId?: number, marketId?: number) => {
     try {
         let adjustedIntervalTo: string | undefined = intervalTo;
 
@@ -11,11 +11,11 @@ export const getAllStatistics = async (intervalFrom?: string, intervalTo?: strin
             adjustedIntervalTo = dayjs(intervalTo).add(1, 'day').format('YYYY-MM-DD');// добавляем 1 день
         }
 
-        const whereClause = intervalFrom && adjustedIntervalTo ? {
-            date: {
-                [Op.between]: [intervalFrom, adjustedIntervalTo]
-            }
-        } : {};
+        const whereClause: any = {
+            ...(intervalFrom && adjustedIntervalTo && { date: { [Op.between]: [intervalFrom, adjustedIntervalTo] } }),
+            ...(userId && { userId }),
+            ...(marketId && { marketId }),
+        };
 
         const statistics = await CampaignStatistics.findAll({ where: whereClause });
         return statistics;
@@ -23,18 +23,18 @@ export const getAllStatistics = async (intervalFrom?: string, intervalTo?: strin
         throw CustomError.internal('Непредвиденная ошибка', error);
     }
 };
-    export const getDailyStatistics = async (intervalFrom?: string, intervalTo?: string) => {
+    export const getDailyStatistics = async (intervalFrom?: string, intervalTo?: string , userId?: number, marketId?: number) => {
         try {
             let adjustedIntervalTo: string | undefined = intervalTo;
 
             if (intervalTo) {
                 adjustedIntervalTo = dayjs(intervalTo).add(1, 'day').format('YYYY-MM-DD');// добавляем 1 день
             }
-            const whereClause = intervalFrom && intervalTo ? {
-                date: {
-                    [Op.between]: [intervalFrom, adjustedIntervalTo]
-                }
-            } : {};
+            const whereClause: any = {
+                ...(intervalFrom && adjustedIntervalTo && { date: { [Op.between]: [intervalFrom, adjustedIntervalTo] } }),
+                ...(userId && { userId }),
+                ...(marketId && { marketId }),
+            };
 
             const statistics = await CampaignStatistics.findAll({ where: whereClause });
         let idCounter = 1;
