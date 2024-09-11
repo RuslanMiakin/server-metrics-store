@@ -12,7 +12,10 @@ cron.schedule('0 6 * * *', async () => {
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     const sendRequest = async () => {
         try {
-            const response = await getYandexDirectReport(includeVAT, reportName);
+            const response = await getYandexDirectReport(
+                1, 1, 'y0_AgAAAAA0UpcqAAZAOQAAAAEPDcBQAABh-dCIoE5H_4Z0CdXtlMSV37uB2A', reportName
+            ); // Передаем тестовые данные
+
             if (response.status === 200) {
                 console.log('Данные успешно обновлены');
                 console.log(parseTSV(response.data)[4000])

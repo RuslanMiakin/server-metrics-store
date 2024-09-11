@@ -3,66 +3,26 @@ import {parseTSV} from "../utils/parseTSV";
 import {sequelize} from "../db";
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
-import {User} from "../db/models/User";
-import {MarketData} from "../db/models/MarketData";
-import {createMarket} from "./marketService";
-import {createUser} from "./userService";
 
-const createTestUser = async () => {
-    const existingUser = await User.findOne({ where: { email: 'test@test.com' } });
-
-    if (existingUser) {
-        console.log(`User with email ${existingUser.email} already exists`);
-        return existingUser.userId;
-    }
-    const testUser = await createUser({
-        email: 'test@test.com',
-        password: 'password123',
-        lastName: 'Test',
-        firstName: 'Test'
-    });
-    console.log(testUser.userId)
-    return testUser.userId;
-};
-    const createTestMarket = async () => {
-    const existingMarket = await MarketData.findOne({ where: { marketName: 'Test Market' } });
-
-    if (existingMarket) {
-        console.log(`Market with name ${existingMarket.marketName} already exists`);
-        return existingMarket.marketId;
-    }
-
-    // Создаем новый тестовый рынок
-    const testMarket = await createMarket({
-        userId: 1, // Предположительно, тестовый пользователь
-        marketName: 'Test Market',
-        token: 'test-token-123' // Предположительно, тестовый токен
-    });
-    console.log(testMarket.userId)
-    return testMarket.marketId;
-};
-
-export const getYandexDirectReport = async (includeVAT: boolean, reportName: string) => {
+export const getYandexDirectReport = async (userId: number, marketId: number, token: string, reportName: string) => {
     const fieldsArray = [
         'CampaignName', 'Date', 'Clicks', 'Cost', 'Ctr', 'AvgCpc', 'Conversions', 'CostPerConversion', 'Impressions'
     ];
-
     const data = {
         "params": {
             "SelectionCriteria": {},
             "FieldNames": fieldsArray,
             "ReportType": "CUSTOM_REPORT",
             "DateRangeType": "ALL_TIME",
-            "IncludeVAT": includeVAT ? 'YES' : 'NO',
-            "ReportName":reportName,
+            "IncludeVAT": 'YES',
+            "ReportName": reportName,
             "Format": "TSV",
             "IncludeDiscount": "NO"
         }
     };
-
     const options = {
         headers: {
-            'Authorization': 'Bearer y0_AgAAAAA0UpcqAAZAOQAAAAEPDcBQAABh-dCIoE5H_4Z0CdXtlMSV37uB2A',
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json; charset=utf-8',
             'Client-Login': 'e-16459034',
             'processingMode': 'offline',
@@ -74,16 +34,11 @@ export const getYandexDirectReport = async (includeVAT: boolean, reportName: str
 
     try {
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
-        // console.log('Report request sent successfully:', response.data);
         const reportData = parseTSV(response.data);
 
-        const userId = await createTestUser();
-        const marketId = await createTestMarket();
-
         const records = reportData.map(record => ({
-            userId: userId,  // заполняем дефолтным значением
-            marketId: marketId,  // заполняем дефолтным значением
-            // accountId: Math.floor(Math.random() * 10000),  // заполняем дефолтным значением
+            userId: userId,
+            marketId: marketId,
             campaignName: record.CampaignName,
             date: new Date(record.Date),
             clicks: parseInt(record.Clicks as string, 10) || 0,
@@ -95,7 +50,7 @@ export const getYandexDirectReport = async (includeVAT: boolean, reportName: str
             impressions: parseInt(record.Impressions as string, 10) || 0
         }));
 
-        await sequelize.transaction(async (t) => {
+        await sequelize.transaction(async (t) => { // todo решить с удалением всех записей из таблицы
             await CampaignStatistics.destroy({ where: {}, transaction: t }); // удаляем все записи из таблицы
             await CampaignStatistics.bulkCreate(records, { transaction: t }); // создаем новые записи
         });

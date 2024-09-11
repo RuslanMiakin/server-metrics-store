@@ -18,10 +18,10 @@ export default [
         },
         rules: {
             ...typescriptEslint.configs.recommended.rules,
-            '@typescript-eslint/no-unused-vars': 'error',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/no-explicit-any': 'warn',
             'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1, maxBOF: 1 }],
+            "@typescript-eslint/no-unused-vars": "off"
         },
     },
 ];

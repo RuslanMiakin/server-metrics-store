@@ -31,7 +31,6 @@ export const login = async (loginData: UserDto): Promise<string> => {
             throw error;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...userWithoutPassword } = user.toJSON();
 
         const userForToken: IUser = {
@@ -61,9 +60,7 @@ export const registration = async (data: UserDto) => {
                 lastName: data.lastName,
             });
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...userWithoutPassword } = newUser.toJSON();
-
         const userForToken: IUser = {
             userId: userWithoutPassword.userId,
             email: userWithoutPassword.email,
