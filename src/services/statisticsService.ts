@@ -75,7 +75,6 @@ export const getAllStatistics = async (intervalFrom?: string, intervalTo?: strin
             data.avgCpc = parseFloat(data.avgCpc.toFixed(2));
             data.cost = parseFloat(data.cost.toFixed(2));
             data.costPerConversion = parseFloat(data.costPerConversion.toFixed(2));
-
         }
 
         const result = Object.values(groupedStatistics);

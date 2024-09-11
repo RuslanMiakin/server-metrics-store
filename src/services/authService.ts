@@ -1,4 +1,4 @@
-import {UserDto} from "../types/types";
+import {IUser, UserDto} from "../types/types";
 import bcrypt from "bcrypt";
 import {generateToken} from "../utils/generateToken";
 import {createUser, getUserByEmail} from "./userService";
@@ -30,8 +30,22 @@ export const login = async (loginData: UserDto): Promise<string> => {
             error.name = 'InvalidPasswordError';
             throw error;
         }
-        const token = generateToken(user);
-        return token;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = user.toJSON();
+
+        const userForToken: IUser = {
+            userId: userWithoutPassword.userId,
+            email: userWithoutPassword.email,
+            firstName: userWithoutPassword.firstName,
+            lastName: userWithoutPassword.lastName,
+            status: userWithoutPassword.status,
+            role: userWithoutPassword.role,
+            createdAt: new Date(userWithoutPassword.createdAt),
+            updatedAt: new Date(userWithoutPassword.updatedAt),
+        };
+        console.log('User for token:', userForToken);
+        return generateToken(userForToken);
     } catch (e) {
         console.log(e);
         throw e;
@@ -46,7 +60,23 @@ export const registration = async (data: UserDto) => {
                 firstName: data.firstName,
                 lastName: data.lastName,
             });
-        return newUser;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = newUser.toJSON();
+
+        const userForToken: IUser = {
+            userId: userWithoutPassword.userId,
+            email: userWithoutPassword.email,
+            firstName: userWithoutPassword.firstName,
+            lastName: userWithoutPassword.lastName,
+            status: userWithoutPassword.status,
+            role: userWithoutPassword.role,
+            createdAt: new Date(userWithoutPassword.createdAt),
+            updatedAt: new Date(userWithoutPassword.updatedAt),
+        };
+        console.log('User for token:', userForToken);
+
+        return generateToken(userForToken)
     } catch (e) {
         console.log(e);
         throw e;

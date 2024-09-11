@@ -3,10 +3,10 @@ import {parseTSV} from "../utils/parseTSV";
 import {sequelize} from "../db";
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
-import {registration} from "./authService";
 import {User} from "../db/models/User";
 import {MarketData} from "../db/models/MarketData";
 import {createMarket} from "./marketService";
+import {createUser} from "./userService";
 
 const createTestUser = async () => {
     const existingUser = await User.findOne({ where: { email: 'test@test.com' } });
@@ -15,7 +15,7 @@ const createTestUser = async () => {
         console.log(`User with email ${existingUser.email} already exists`);
         return existingUser.userId;
     }
-    const testUser = await registration({
+    const testUser = await createUser({
         email: 'test@test.com',
         password: 'password123',
         lastName: 'Test',

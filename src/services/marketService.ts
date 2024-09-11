@@ -1,5 +1,5 @@
 import { MarketData } from "../db/models/MarketData";
-import { MarketDto } from "../types/types";
+import {IMarket, IUser, MarketDto} from "../types/types";
 import { User } from "../db/models/User";
 
 export const createMarket = async (marketData: MarketDto) => {
@@ -21,14 +21,26 @@ export const getMarketsByUserId = async (userId: number) => {
     try {
         const markets = await MarketData.findAll({
             where: { userId },
-            include: [User, 'campaignStatistics'],
+            // include: [User, 'campaignStatistics'],
         });
         if (markets.length === 0) {
             throw new Error(`Маркетов для пользователя с ID ${userId} не найдено`);
         }
-        return markets;
+        const marketsWithoutToken = markets.map((market: any) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { token, ...marketDataWithoutToken } = market.get();
+            return {
+                userId: marketDataWithoutToken.userId,
+                marketId: marketDataWithoutToken.marketId,
+                marketName: marketDataWithoutToken.marketName,
+                createdAt: marketDataWithoutToken.createdAt,
+                updatedAt: marketDataWithoutToken.updatedAt,
+            };
+        });
+        return marketsWithoutToken as IMarket[];
     } catch (e) {
         console.error(e);
         throw e;
     }
 };
+

@@ -22,12 +22,11 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 
 export const registrationController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = await registration(req.body);
-        if (!user) {
+        const token = await registration(req.body);
+        if (!token) {
             next(CustomError.internal('Не удалось создать пользователя'));
         } else {
-            const token = generateToken(user);
-            return res.status(201).send({ status: 'success', data: { user, token } });
+            return res.status(201).send({ status: 'success', data: { token } });
         }
     } catch (e) {
         next(CustomError.internal('Ошибка регистрации', e));
