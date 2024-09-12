@@ -7,11 +7,11 @@ async function updateMarketData() {
         const markets = await MarketData.findAll();
 
         const requests = markets.map((market) => {
-            const { userId, marketId, token } = market;
+            const { userId, marketId,clientLogin, token } = market;
             const formattedDate = new Date().toLocaleDateString('ru-RU');
             const reportName = `Daily Yandex Direct Report for ${userId} user and ${marketId} market ${formattedDate}`;
 
-            return sendYandexRequest(userId, marketId, token, reportName);
+            return sendYandexRequest(userId, marketId, clientLogin, token, reportName);
         });
 
         const results = await Promise.allSettled(requests);

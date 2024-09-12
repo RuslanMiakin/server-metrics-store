@@ -4,6 +4,7 @@ import { User } from "../db/models/User";
 
 export const createMarket = async (marketData: MarketDto) => {
     try {
+        console.log(marketData);
         const userExists = await User.findByPk(marketData.userId);
         if (!userExists) {
             throw new Error(`Пользователь с ID ${marketData.userId} не найден`);
@@ -31,6 +32,7 @@ export const getMarketsByUserId = async (userId: number) => {
                 userId: marketDataWithoutToken.userId,
                 marketId: marketDataWithoutToken.marketId,
                 marketName: marketDataWithoutToken.marketName,
+                clientLogin: marketDataWithoutToken.clientLogin,
                 createdAt: marketDataWithoutToken.createdAt,
                 updatedAt: marketDataWithoutToken.updatedAt,
             };

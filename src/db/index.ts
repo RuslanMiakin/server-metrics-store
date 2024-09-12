@@ -9,7 +9,7 @@ interface DBConfig {
     database: string;
     storage?: string;
     models: string[];
-    logging: (msg: string) => void;
+    logging: boolean;
 }
 
 const db_config: DBConfig = {
@@ -20,7 +20,7 @@ const db_config: DBConfig = {
     password: process.env.DB_PASS || 'DB_PASS',
     database: process.env.DB_NAME || 'DB_NAME',
     models: [__dirname + '/models'],
-    logging: console.log
+    logging: false
 };
 
 export const sequelize = new Sequelize(db_config);

@@ -9,6 +9,7 @@ export interface UserDto {
 
 export interface MarketDto {
     userId: number;
+    clientLogin: string;
     marketName: string;
     token: string;
 }

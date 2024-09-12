@@ -7,6 +7,7 @@ import {getYandexDirectReport} from "../services/yandexDirectService";
 export const sendYandexRequest = async (
     userId: number,
     marketId: number,
+    clientLogin: string,
     token: string,
     reportName: string,
     maxRetries: number = 4
@@ -15,7 +16,7 @@ export const sendYandexRequest = async (
     let counter = 0;
     const makeRequest = async (): Promise< void | string> => {
         try {
-            const response = await getYandexDirectReport(userId, marketId, token, reportName);
+            const response = await getYandexDirectReport(userId, marketId,clientLogin, token, reportName);
             if (response.status === 200) {
                 console.log('Данные успешно обновлены');
                 return 'success';
@@ -59,9 +60,9 @@ export const createTestUser = async () => {
         lastName: 'Test',
         firstName: 'Test'
     });
-    // console.log(testUser.userId)
     return testUser.userId;
 };
+
 export const createTestMarket = async () => {
     const existingMarket = await MarketData.findOne({ where: { marketName: 'Test Market' } });
 
@@ -69,13 +70,11 @@ export const createTestMarket = async () => {
         console.log(`Market with name ${existingMarket.marketName} already exists`);
         return existingMarket.marketId;
     }
-
     const testMarket = await createMarket({
         userId: 1,
         marketName: 'Test Market',
-        // token: 'y0_AgAAAAA0UpcqAAZAOQAAAAEPDcBQAABh-dCIoE5H_4Z0CdXtlMSV37uB2A'
+        clientLogin: 'peterlermantov',
         token: 'y0_AgAAAAAuFc8fAAZAOQAAAAEQvauDAABQDjLWktZJ2LKw9Ei6e3IOwaKBJg'
     });
-    // console.log(testMarket.userId)
     return testMarket.marketId;
 };

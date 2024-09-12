@@ -4,7 +4,7 @@ import {sequelize} from "../db";
 import {CampaignStatistics} from "../db/models/CampaignStatistics";
 import CustomError from "../errors/CustomError";
 
-export const getYandexDirectReport = async (userId: number, marketId: number, token: string, reportName: string) => {
+export const getYandexDirectReport = async (userId: number, marketId: number, clientLogin:string, token: string, reportName: string) => {
     const fieldsArray = [
         'CampaignName', 'Date', 'Clicks', 'Cost', 'Ctr', 'AvgCpc', 'Conversions', 'CostPerConversion', 'Impressions'
     ];
@@ -24,8 +24,7 @@ export const getYandexDirectReport = async (userId: number, marketId: number, to
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json; charset=utf-8',
-            // 'Client-Login': 'e-16459034',
-            'Client-Login': 'peterlermantov',
+            'Client-Login': clientLogin,
             'processingMode': 'offline',
             'returnMoneyInMicros': false,
             'skipReportHeader': true,
@@ -36,6 +35,7 @@ export const getYandexDirectReport = async (userId: number, marketId: number, to
     try {
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
         const reportData = parseTSV(response.data);
+        console.log('Данные отчета:пришли'); // todo удалить
 
         const records = reportData.map(record => ({
             userId: userId,

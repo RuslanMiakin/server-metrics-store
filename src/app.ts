@@ -1,13 +1,13 @@
 import "dotenv/config";
 import express, {Application} from 'express';
-// import './cron/scheduler'
+import './cron/scheduler'
+import './utils/enhancedConsole';
 import { sequelize } from './db';
 import routes from './routes';
 import cors from 'cors';
 import errorHandler from "./middleware/errorHandler";
 import {createTestMarket, createTestUser} from "./utils/utils";
 const app:Application = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(routes);

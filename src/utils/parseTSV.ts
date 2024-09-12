@@ -12,6 +12,5 @@ export const parseTSV = (tsv: string): ReportData[] => {
             return obj;
         }, {} as ReportData);
     });
-    console.log(data);
     return data;
 };
