@@ -14,6 +14,7 @@ export interface MarketDto {
 }
 
 export interface IMarket {
+    clientLogin: string;
     marketId: number;
     userId: number;
     marketName: string;

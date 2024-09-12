@@ -3,7 +3,6 @@ import CustomError from "../errors/CustomError";
 import {createMarket, getMarketsByUserId} from "../services/marketService";
 
 export const createMarketController = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     try {
         const newMarket = await createMarket(req.body);
         if (!newMarket) {

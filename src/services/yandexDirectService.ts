@@ -24,7 +24,8 @@ export const getYandexDirectReport = async (userId: number, marketId: number, to
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json; charset=utf-8',
-            'Client-Login': 'e-16459034',
+            // 'Client-Login': 'e-16459034',
+            'Client-Login': 'peterlermantov',
             'processingMode': 'offline',
             'returnMoneyInMicros': false,
             'skipReportHeader': true,
@@ -50,9 +51,16 @@ export const getYandexDirectReport = async (userId: number, marketId: number, to
             impressions: parseInt(record.Impressions as string, 10) || 0
         }));
 
-        await sequelize.transaction(async (t) => { // todo решить с удалением всех записей из таблицы
-            await CampaignStatistics.destroy({ where: {}, transaction: t }); // удаляем все записи из таблицы
+        await sequelize.transaction(async (t) => { // удаляем все записи с текущим userId и marketId
+            await CampaignStatistics.destroy({
+                where: {
+                    userId: userId,
+                    marketId: marketId
+                },
+                transaction: t
+            });
             await CampaignStatistics.bulkCreate(records, { transaction: t }); // создаем новые записи
+
         });
 
         console.log('Данные успешно обновлены в базе данных');

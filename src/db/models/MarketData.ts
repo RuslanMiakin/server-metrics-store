@@ -1,4 +1,4 @@
-import { DataType, Table, Column, Model, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import {DataType, Table, Column, Model, ForeignKey, BelongsTo, HasMany, BeforeCreate} from 'sequelize-typescript';
 import { User } from './User';
 import { CampaignStatistics } from './CampaignStatistics';
 
@@ -38,4 +38,22 @@ export class MarketData extends Model {
 
     @HasMany(() => CampaignStatistics)
     campaignStatistics?: CampaignStatistics[];
+
+    @Column({
+        type: DataType.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+    })
+    declare state: boolean;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: true
+    })
+    declare clientLogin: string;
+
+    @BeforeCreate
+    static setInitialState(instance: MarketData) { // хук для изменения state при создании новой записи
+        instance.state = true;
+    }
 }
