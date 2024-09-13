@@ -6,28 +6,29 @@
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             const stack = err.stack.split('\n');
-            const callerInfo = stack[2].trim(); // Получаем третью строку стека, где хранится информация о вызове
-
+            const callerInfo = stack[2].trim();
             const formattedInfo = callerInfo.match(/at (.+):(\d+):\d+|\((.*):(\d+):\d+\)/);
             let location = '';
 
             if (formattedInfo) {
-                const filePath = formattedInfo[1] || formattedInfo[3]; // Обрабатываем оба возможных формата
+                const filePath = formattedInfo[1] || formattedInfo[3];
                 const lineNumber = formattedInfo[2] || formattedInfo[4];
-
                 if (filePath && lineNumber) {
-                    const fileName = filePath.split('/').slice(-2).join('/'); // Получаем последние два сегмента пути
+                    const fileName = filePath.split('/').slice(-2).join('/');
+                    const colorStartFilePath = '\x1b[38;5;244m';
+                    const colorStartLineNumber = '\x1b[38;5;96m';
+                    const colorReset = '\x1b[0m';
 
-                    // Устанавливаем цвет пути. Пример: синий цвет текста (ANSI код: 34)
-                    const colorStart = '\x1b[34m'; // Начало цветного текста
-                    const colorReset = '\x1b[0m';  // Сброс цвета до стандартного
+                    // Получение текущего времени
+                    const now = new Date();
+                    const timeString = now.toTimeString().split(' ')[0]; // Время в формате HH:MM:SS
 
-                    location = `\n\t${colorStart}[/${fileName}:${lineNumber}]${colorReset}\n`;
+                    // Формирование строки с цветным выводом
+                    location = `\n\t${colorStartFilePath}${timeString} .../${fileName}:${colorStartLineNumber}${lineNumber}${colorStartFilePath}${colorReset}\n`;
                 }
             }
             originalLog.apply(console, [location, ...args]);
         } catch (e) {
-            // В случае ошибки, используем оригинальный console.log
             originalLog.apply(console, args);
         }
     };

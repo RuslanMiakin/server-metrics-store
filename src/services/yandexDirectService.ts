@@ -35,7 +35,7 @@ export const getYandexDirectReport = async (userId: number, marketId: number, cl
     try {
         const response = await axios.post('https://api.direct.yandex.com/json/v5/reports', data, options);
         const reportData = parseTSV(response.data);
-        console.log('Данные отчета:пришли'); // todo удалить
+        console.log('Данные отчета пришли');
 
         const records = reportData.map(record => ({
             userId: userId,

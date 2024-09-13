@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import CustomError from "../errors/CustomError";
 import jwt from "jsonwebtoken";
-import {generateToken} from "../utils/generateToken";
 import {login, registration} from "../services/authService";
 import {User} from "../db/models/User";
 

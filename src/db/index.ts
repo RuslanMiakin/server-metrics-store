@@ -1,18 +1,8 @@
+import 'dotenv/config';
 import { Sequelize } from 'sequelize-typescript';
 import { Dialect } from 'sequelize';
-interface DBConfig {
-    dialect: Dialect;
-    host: string;
-    port: number;
-    username: string;
-    password: string;
-    database: string;
-    storage?: string;
-    models: string[];
-    logging: boolean;
-}
 
-const db_config: DBConfig = {
+const db_config = {
     dialect: (process.env.DB_DIALECT as Dialect) || 'postgres',
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),

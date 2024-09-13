@@ -7,8 +7,6 @@ export const getChartStatisticsController = async (req: Request, res: Response, 
         const { intervalFrom, intervalTo } = req.query;
         const userId = Number(req.query.userId);
         const marketId = Number(req.query.currentMarketId);
-        console.log(userId);
-        console.log(marketId);
 
         if (isNaN(userId) || isNaN(marketId)) {
             next(CustomError.badRequest('Некорректный userId или marketId'));

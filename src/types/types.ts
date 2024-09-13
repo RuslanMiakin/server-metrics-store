@@ -1,8 +1,8 @@
 export interface UserDto {
     email: string;
     firstName: string;
-    lastName?: string;
-    password?: string;
+    lastName: string;
+    password: string;
     status?: number;
     role?: number;
 }
@@ -12,6 +12,7 @@ export interface MarketDto {
     clientLogin: string;
     marketName: string;
     token: string;
+    state?: boolean;
 }
 
 export interface IMarket {
