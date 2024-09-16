@@ -2,6 +2,8 @@ import cron from 'node-cron';
 import { sendYandexRequest } from '../utils/utils';
 import {MarketData} from "../db/models/MarketData";
 
+
+
 export async function updateMarketDataMorning() {
     try {
         const markets = await MarketData.findAll();
@@ -39,11 +41,24 @@ export async function updateMarketDataMorning() {
     }
 }
 
+
+//?? Сделать простую проверку на день недели / время ()
 export async function updateMarketDataEvery20Minutes() {
     try {
-        const markets = await MarketData.findAll({
+		
+		let markets = await MarketData.findAll({
             where: { state: true }
         });
+		
+		const now = new Date();
+		const hours = now.getHours()
+		const minutes = now.getMinutes()
+		
+		if(housr === '6' && (minutes < 30)){
+			markets = await MarketData.findAll();
+		}
+		
+		
         if (markets.length === 0) {
             console.log('Нет новых маркетов для обновления.');
             return;
@@ -52,6 +67,8 @@ export async function updateMarketDataEvery20Minutes() {
         const requests = markets.map((market) => {
             const { userId, marketId, clientLogin, token } = market;
             const formattedDateTime = new Date().toLocaleString('ru-RU');
+			
+			//Продумать логику на основе данных выше
             const reportName = `Yandex Direct Report every 20 minutes for ${userId} user and ${marketId} market ${formattedDateTime}`;
 
             return sendYandexRequest(userId, marketId, clientLogin, token, reportName);
@@ -69,7 +86,7 @@ export async function updateMarketDataEvery20Minutes() {
             if (result.status === 'fulfilled' && result.value === 'success') {
                 console.log(`Запрос для marketId ${marketId} выполнен успешно.`);
 
-                // Обновляем state на false
+                // Обновляем state на false (если данные обновились, записи в любом случае ставим в false, не трогаем)
                 await MarketData.update({ state: false }, { where: { marketId } });
             } else {
                 allSuccessful = false;
